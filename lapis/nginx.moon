@@ -1,4 +1,5 @@
 import escape_pattern, parse_content_disposition, build_url from require "lapis.util"
+import parse_content_type from require "lapis.util"
 import run_after_dispatch from require "lapis.nginx.context"
 lapis_config = require "lapis.config"
 
@@ -26,16 +27,20 @@ parse_multipart = ->
           if params = parse_content_disposition value
             for tuple in *params
               current[tuple[1]] = tuple[2]
+        else if name == "Content-Type"
+          content_type = parse_content_type value
+          current['content-type'] = content_type
         else
           current[name\lower!] = value
       when "part_end"
         current.content = table.concat current.content
 
         if current.name
-          if current["content-type"] -- a file
-            out[current.name] = current
-          else
-            out[current.name] = current.content
+          switch current["content-type"]
+            when nil, "", "text/plain" -- not file
+              out[current.name] = current.content
+            else
+              out[current.name] = current
 
         current = { content: {} }
       when "eof"

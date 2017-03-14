@@ -3,6 +3,8 @@ do
   local _obj_0 = require("lapis.util")
   escape_pattern, parse_content_disposition, build_url = _obj_0.escape_pattern, _obj_0.parse_content_disposition, _obj_0.build_url
 end
+local parse_content_type
+parse_content_type = require("lapis.util").parse_content_type
 local run_after_dispatch
 run_after_dispatch = require("lapis.nginx.context").run_after_dispatch
 local lapis_config = require("lapis.config")
@@ -45,15 +47,21 @@ parse_multipart = function()
           end
         end
       else
-        current[name:lower()] = value
+        if name == "Content-Type" then
+          local content_type = parse_content_type(value)
+          current['content-type'] = content_type
+        else
+          current[name:lower()] = value
+        end
       end
     elseif "part_end" == _exp_0 then
       current.content = table.concat(current.content)
       if current.name then
-        if current["content-type"] then
-          out[current.name] = current
-        else
+        local _exp_1 = current["content-type"]
+        if nil == _exp_1 or "" == _exp_1 or "text/plain" == _exp_1 then
           out[current.name] = current.content
+        else
+          out[current.name] = current
         end
       end
       current = {

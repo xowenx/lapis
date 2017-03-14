@@ -86,6 +86,11 @@ parse_content_disposition = do
     with out = patt\match str
       inject_tuples out if out
 
+parse_content_type = (str) ->
+  index = str\find(';') 
+  str = str\sub(1, index-1) if index
+  trim str 
+
 parse_cookie_string = (str) ->
   return {} unless str
   {unescape(key), unescape(value) for key, value in str\gmatch("([^=%s]*)=([^;]*)")}
@@ -378,8 +383,8 @@ singularize = (name) ->
   (name\gsub("ies$", "y")\gsub("oes$", "o")\gsub("s$", ""))
 
 { :unescape, :escape, :escape_pattern, :parse_query_string,
-  :parse_content_disposition, :parse_cookie_string, :encode_query_string,
-  :underscore, :slugify, :uniquify, :trim, :trim_all, :trim_filter,
+  :parse_content_disposition, :parse_content_type, :parse_cookie_string, 
+  :encode_query_string, :underscore, :slugify, :uniquify, :trim, :trim_all, :trim_filter,
   :key_filter, :to_json, :from_json, :json_encodable, :build_url, :time_ago,
   :time_ago_in_words, :camelize, :title_case, :autoload, :auto_table,
   :mixin_class, :mixin, :get_fields, :singularize, :date_diff }
