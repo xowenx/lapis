@@ -259,7 +259,7 @@ json_encodable = function(obj, seen)
       end
       return _tbl_0
     end
-  elseif "function" == _exp_0 or "userdata" == _exp_0 or "thread" == _exp_0 then
+  elseif "function" == _exp_0 or "thread" == _exp_0 then
     return nil
   else
     return obj

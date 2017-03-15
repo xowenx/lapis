@@ -154,7 +154,7 @@ json_encodable = (obj, seen={}) ->
       unless seen[obj]
         seen[obj] = true
         { k, json_encodable(v) for k,v in pairs(obj) when type(k) == "string" or type(k) == "number" }
-    when "function", "userdata", "thread"
+    when "function", "thread"
       nil
     else
       obj
