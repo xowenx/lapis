@@ -1,5 +1,4 @@
 local url = require("socket.url")
-local json = require("cjson")
 local concat, insert
 do
   local _obj_0 = table
@@ -267,9 +266,11 @@ json_encodable = function(obj, seen)
   end
 end
 to_json = function(obj)
+  local json = require("cjson")
   return json.encode(json_encodable(obj))
 end
 from_json = function(obj)
+  local json = require("cjson")
   return json.decode(obj)
 end
 build_url = function(parts)

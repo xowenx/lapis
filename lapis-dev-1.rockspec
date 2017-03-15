@@ -20,7 +20,6 @@ dependencies = {
 	"etlua",
 	"loadkit",
 	"lpeg",
-	"lua-cjson",
 	"luacrypto",
 	"luafilesystem",
 	"luasocket",

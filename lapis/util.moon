@@ -1,6 +1,5 @@
 
 url = require "socket.url"
-json = require "cjson"
 
 import concat, insert from table
 import floor from math
@@ -160,8 +159,13 @@ json_encodable = (obj, seen={}) ->
     else
       obj
 
-to_json = (obj) -> json.encode json_encodable obj
-from_json = (obj) -> json.decode obj
+to_json = (obj) -> 
+  json = require "cjson"
+  json.encode json_encodable obj
+
+from_json = (obj) -> 
+  json = require "cjson"
+  json.decode obj
 
 -- {
 --     [path] = "/test"
