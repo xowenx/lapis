@@ -247,6 +247,8 @@ json_encodable = function(obj, seen)
   if seen == nil then
     seen = { }
   end
+  local ucl = require("liblua-ucl")
+  local json = require("cjson")
   local _exp_0 = type(obj)
   if "table" == _exp_0 then
     if not (seen[obj]) then
@@ -261,6 +263,15 @@ json_encodable = function(obj, seen)
     end
   elseif "function" == _exp_0 or "thread" == _exp_0 then
     return nil
+  elseif "userdata" == _exp_0 then
+    local _exp_1 = obj
+    if json.null == _exp_1 or json.empty_array == _exp_1 then
+      return obj
+    elseif ucl.null == _exp_1 then
+      return json.null
+    else
+      return nil
+    end
   else
     return obj
   end

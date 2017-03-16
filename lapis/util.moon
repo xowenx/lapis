@@ -149,6 +149,8 @@ key_filter = (tbl, ...) ->
   tbl
 
 json_encodable = (obj, seen={}) ->
+  ucl = require("liblua-ucl")
+  json = require "cjson"
   switch type obj
     when "table"
       unless seen[obj]
@@ -156,6 +158,14 @@ json_encodable = (obj, seen={}) ->
         { k, json_encodable(v) for k,v in pairs(obj) when type(k) == "string" or type(k) == "number" }
     when "function", "thread"
       nil
+    when "userdata"
+      switch obj
+        when json.null, json.empty_array
+          obj
+        when ucl.null
+          json.null
+        else
+          nil
     else
       obj
 
